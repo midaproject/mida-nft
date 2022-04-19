@@ -13,16 +13,29 @@ contract MIDANFT is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Access
 
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
+    bytes32 public constant SETTER_ROLE = keccak256("SETTER_ROLE");
+
     Counters.Counter private _tokenIdCounter;
+
+    string private _baseTokenURI;
+
+    event NewBaseURI(string indexed oldBaseURI, string indexed newBaseURI);
 
     constructor() ERC721("MIDA NFT", "MIDANFT") {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(PAUSER_ROLE, msg.sender);
         _grantRole(MINTER_ROLE, msg.sender);
+        _grantRole(SETTER_ROLE, msg.sender);
     }
 
-    function _baseURI() internal pure override returns (string memory) {
-        return "";
+    function setBaseURI(string memory newBaseURI) public onlyRole(SETTER_ROLE) {
+        string memory oldBaseURI = _baseTokenURI;
+        _baseTokenURI = newBaseURI;
+        emit NewBaseURI(oldBaseURI, _baseTokenURI);
+    }
+
+    function _baseURI() internal view override returns (string memory) {
+        return _baseTokenURI;
     }
 
     function pause() public onlyRole(PAUSER_ROLE) {
