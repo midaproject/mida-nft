@@ -21,13 +21,13 @@ export interface TestResources {
 export async function getTestResources(): Promise<TestResources> {
   const signers = await ethers.getSigners();
   const pauser = signers[1];
-  const pauserAddress = (await pauser.getAddress()).toLowerCase();
+  const pauserAddress = await pauser.getAddress();
   const minter = signers[2];
-  const minterAddress = (await minter.getAddress()).toLowerCase();
+  const minterAddress = await minter.getAddress();
   const setter = signers[3];
-  const setterAddress = (await setter.getAddress()).toLowerCase();
+  const setterAddress = await setter.getAddress();
   const anon = signers[4];
-  const anonAddress = (await anon.getAddress()).toLowerCase();
+  const anonAddress = await anon.getAddress();
 
   const MIDANFT = await ethers.getContractFactory("MIDANFT");
   const midanft = await MIDANFT.deploy();
