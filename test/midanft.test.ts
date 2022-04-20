@@ -64,4 +64,31 @@ describe("MIDANFT", () => {
       expect(afterBalance).eq(beforeBalance.add(1));
     });
   });
+
+  describe("safeMintBatch", () => {
+    it("reject mint if not minter", async () => {
+      const { midanft, anon, anonAddress, minterRole } = testResources;
+      const tx = midanft.connect(anon).safeMintBatch(5);
+      await expect(tx).revertedWith(
+        `AccessControl: account ${anonAddress.toLowerCase()} is missing role ${minterRole}`
+      );
+    });
+
+    it("reject mint if out of bounds", async () => {
+      const { midanft, minter } = testResources;
+      const tx = midanft.connect(minter).safeMintBatch(0);
+      await expect(tx).revertedWith(`Quantity must be > 0`);
+    });
+
+    it("should mint", async () => {
+      const { midanft, minter, minterAddress } = testResources;
+      const beforeBalance = await midanft.balanceOf(minterAddress);
+
+      const tx = midanft.connect(minter).safeMintBatch(5);
+      await expect(tx).emit(midanft, "Transfer").withArgs(AddressZero, minterAddress, 4);
+
+      const afterBalance = await midanft.balanceOf(minterAddress);
+      expect(afterBalance).eq(beforeBalance.add(5));
+    });
+  });
 });
