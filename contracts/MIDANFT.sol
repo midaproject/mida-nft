@@ -46,11 +46,10 @@ contract MIDANFT is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Access
         _unpause();
     }
 
-    function safeMint(address to, string memory uri) public onlyRole(MINTER_ROLE) {
+    function safeMint() public onlyRole(MINTER_ROLE) {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
-        _safeMint(to, tokenId);
-        _setTokenURI(tokenId, uri);
+        _safeMint(_msgSender(), tokenId);
     }
 
     function _beforeTokenTransfer(address from, address to, uint256 tokenId)
