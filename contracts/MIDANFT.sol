@@ -5,10 +5,10 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
-import "@openzeppelin/contracts/access/AccessControl.sol";
+import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
-contract MIDANFT is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, AccessControl {
+contract MIDANFT is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, AccessControlEnumerable {
     using Counters for Counters.Counter;
 
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
@@ -85,7 +85,7 @@ contract MIDANFT is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Access
     function supportsInterface(bytes4 interfaceId)
         public
         view
-        override(ERC721, ERC721Enumerable, AccessControl)
+        override(ERC721, ERC721Enumerable, AccessControlEnumerable)
         returns (bool)
     {
         return super.supportsInterface(interfaceId);
