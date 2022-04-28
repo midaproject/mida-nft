@@ -4,11 +4,12 @@ pragma solidity 0.8.13;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Royalty.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
-contract MIDANFT is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, AccessControlEnumerable {
+contract MIDANFT is ERC721, ERC721Enumerable, ERC721URIStorage, ERC721Royalty, Pausable, AccessControlEnumerable {
     using Counters for Counters.Counter;
 
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
@@ -28,6 +29,14 @@ contract MIDANFT is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Access
         _grantRole(SETTER_ROLE, msg.sender);
     }
 
+    function pause() public onlyRole(PAUSER_ROLE) {
+        _pause();
+    }
+
+    function unpause() public onlyRole(PAUSER_ROLE) {
+        _unpause();
+    }
+
     function setBaseURI(string memory newBaseURI) public onlyRole(SETTER_ROLE) {
         string memory oldBaseURI = _baseTokenURI;
         _baseTokenURI = newBaseURI;
@@ -38,12 +47,12 @@ contract MIDANFT is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Access
         return _baseTokenURI;
     }
 
-    function pause() public onlyRole(PAUSER_ROLE) {
-        _pause();
+    function setDefaultRoyalty(address receiver, uint96 feeNumerator) public onlyRole(SETTER_ROLE) {
+        _setDefaultRoyalty(receiver, feeNumerator);
     }
 
-    function unpause() public onlyRole(PAUSER_ROLE) {
-        _unpause();
+    function setTokenRoyalty(uint256 tokenId, address receiver, uint96 feeNumerator) public onlyRole(SETTER_ROLE) {
+        _setTokenRoyalty(tokenId, receiver, feeNumerator);
     }
 
     function safeMint() public onlyRole(MINTER_ROLE) {
@@ -69,7 +78,7 @@ contract MIDANFT is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Access
 
     // The following functions are overrides required by Solidity.
 
-    function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage) {
+    function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage, ERC721Royalty) {
         super._burn(tokenId);
     }
 
@@ -85,7 +94,7 @@ contract MIDANFT is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Access
     function supportsInterface(bytes4 interfaceId)
         public
         view
-        override(ERC721, ERC721Enumerable, AccessControlEnumerable)
+        override(ERC721, ERC721Enumerable, ERC721Royalty, AccessControlEnumerable)
         returns (bool)
     {
         return super.supportsInterface(interfaceId);
