@@ -44,6 +44,48 @@ describe("MIDANFT", () => {
     });
   });
 
+  describe("setDefaultRoyalty", () => {
+    it("reject if not setter", async () => {
+      const { midanft, anon, anonAddress, setterRole } = testResources;
+      const tx = midanft.connect(anon).setDefaultRoyalty(anonAddress, 300);
+      await expect(tx).revertedWith(
+        `AccessControl: account ${anonAddress.toLowerCase()} is missing role ${setterRole}`
+      );
+    });
+
+    it("should set the default royalty", async () => {
+      const { midanft, setter, anonAddress } = testResources;
+      await midanft.connect(setter).setDefaultRoyalty(anonAddress, 300);
+      const royaltyInfo = await midanft.royaltyInfo(1, 30000);
+      expect(royaltyInfo[0]).eq(anonAddress);
+      expect(royaltyInfo[1]).eq(900);
+    });
+  });
+
+  describe("setTokenRoyalty", () => {
+    it("reject if not setter", async () => {
+      const { midanft, anon, anonAddress, setterRole } = testResources;
+      const tx = midanft.connect(anon).setTokenRoyalty(1, anonAddress, 200);
+      await expect(tx).revertedWith(
+        `AccessControl: account ${anonAddress.toLowerCase()} is missing role ${setterRole}`
+      );
+    });
+
+    it("should set the token royalty", async () => {
+      const { midanft, setter, anonAddress } = testResources;
+      await midanft.connect(setter).setDefaultRoyalty(anonAddress, 200);
+      await midanft.connect(setter).setTokenRoyalty(2, anonAddress, 300);
+
+      const royaltyInfo1 = await midanft.royaltyInfo(1, 30000);
+      const royaltyInfo2 = await midanft.royaltyInfo(2, 30000);
+
+      expect(royaltyInfo1[0]).eq(anonAddress);
+      expect(royaltyInfo1[1]).eq(600);
+      expect(royaltyInfo2[0]).eq(anonAddress);
+      expect(royaltyInfo2[1]).eq(900);
+    });
+  });
+
   describe("safeMint", () => {
     it("reject mint if not minter", async () => {
       const { midanft, anon, anonAddress, minterRole } = testResources;
