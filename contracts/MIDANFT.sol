@@ -53,7 +53,11 @@ contract MIDANFT is ERC721, ERC721Enumerable, ERC721URIStorage, ERC721Royalty, P
         _setDefaultRoyalty(receiver, feeNumerator);
     }
 
-    function setTokenRoyalty(uint256 tokenId, address receiver, uint96 feeNumerator) public onlyRole(ROYALTY_SETTER_ROLE) {
+    function setTokenRoyalty(
+        uint256 tokenId,
+        address receiver,
+        uint96 feeNumerator
+    ) public onlyRole(ROYALTY_SETTER_ROLE) {
         _setTokenRoyalty(tokenId, receiver, feeNumerator);
     }
 
@@ -70,11 +74,11 @@ contract MIDANFT is ERC721, ERC721Enumerable, ERC721URIStorage, ERC721Royalty, P
         }
     }
 
-    function _beforeTokenTransfer(address from, address to, uint256 tokenId)
-        internal
-        whenNotPaused
-        override(ERC721, ERC721Enumerable)
-    {
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256 tokenId
+    ) internal override(ERC721, ERC721Enumerable) whenNotPaused {
         super._beforeTokenTransfer(from, to, tokenId);
     }
 
@@ -84,12 +88,7 @@ contract MIDANFT is ERC721, ERC721Enumerable, ERC721URIStorage, ERC721Royalty, P
         super._burn(tokenId);
     }
 
-    function tokenURI(uint256 tokenId)
-        public
-        view
-        override(ERC721, ERC721URIStorage)
-        returns (string memory)
-    {
+    function tokenURI(uint256 tokenId) public view override(ERC721, ERC721URIStorage) returns (string memory) {
         return super.tokenURI(tokenId);
     }
 

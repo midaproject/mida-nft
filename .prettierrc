@@ -1,1 +1,10 @@
-{}
+{
+  "overrides": [
+    {
+      "files": ["*.sol", "test/**/*.ts"],
+      "options": {
+        "printWidth": 120
+      }
+    }
+  ]
+}
