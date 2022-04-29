@@ -21,7 +21,7 @@ contract MIDANFT is ERC721, ERC721Enumerable, ERC721URIStorage, ERC721Royalty, P
 
     string private _baseTokenURI;
 
-    event NewBaseURI(string indexed oldBaseURI, string indexed newBaseURI);
+    event BaseURIChanged(string indexed oldBaseURI, string indexed newBaseURI);
 
     constructor() ERC721("MIDA NFT", "MIDANFT") {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
@@ -42,7 +42,7 @@ contract MIDANFT is ERC721, ERC721Enumerable, ERC721URIStorage, ERC721Royalty, P
     function setBaseURI(string memory newBaseURI) public onlyRole(URI_SETTER_ROLE) {
         string memory oldBaseURI = _baseTokenURI;
         _baseTokenURI = newBaseURI;
-        emit NewBaseURI(oldBaseURI, _baseTokenURI);
+        emit BaseURIChanged(oldBaseURI, _baseTokenURI);
     }
 
     function _baseURI() internal view override returns (string memory) {

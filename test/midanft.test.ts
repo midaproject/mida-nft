@@ -40,7 +40,7 @@ describe("MIDANFT", () => {
     it("should set a new base uri when called by setter", async () => {
       const { midanft, uriSetter } = testResources;
       const tx = midanft.connect(uriSetter).setBaseURI("ipfs://abc");
-      await expect(tx).emit(midanft, "NewBaseURI").withArgs("", "ipfs://abc");
+      await expect(tx).emit(midanft, "BaseURIChanged").withArgs("", "ipfs://abc");
     });
   });
 
