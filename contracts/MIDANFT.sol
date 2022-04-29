@@ -14,7 +14,8 @@ contract MIDANFT is ERC721, ERC721Enumerable, ERC721URIStorage, ERC721Royalty, P
 
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
-    bytes32 public constant SETTER_ROLE = keccak256("SETTER_ROLE");
+    bytes32 public constant URI_SETTER_ROLE = keccak256("URI_SETTER_ROLE");
+    bytes32 public constant ROYALTY_SETTER_ROLE = keccak256("ROYALTY_SETTER_ROLE");
 
     Counters.Counter private _tokenIdCounter;
 
@@ -26,7 +27,8 @@ contract MIDANFT is ERC721, ERC721Enumerable, ERC721URIStorage, ERC721Royalty, P
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(PAUSER_ROLE, msg.sender);
         _grantRole(MINTER_ROLE, msg.sender);
-        _grantRole(SETTER_ROLE, msg.sender);
+        _grantRole(URI_SETTER_ROLE, msg.sender);
+        _grantRole(ROYALTY_SETTER_ROLE, msg.sender);
     }
 
     function pause() public onlyRole(PAUSER_ROLE) {
@@ -37,7 +39,7 @@ contract MIDANFT is ERC721, ERC721Enumerable, ERC721URIStorage, ERC721Royalty, P
         _unpause();
     }
 
-    function setBaseURI(string memory newBaseURI) public onlyRole(SETTER_ROLE) {
+    function setBaseURI(string memory newBaseURI) public onlyRole(URI_SETTER_ROLE) {
         string memory oldBaseURI = _baseTokenURI;
         _baseTokenURI = newBaseURI;
         emit NewBaseURI(oldBaseURI, _baseTokenURI);
@@ -47,11 +49,11 @@ contract MIDANFT is ERC721, ERC721Enumerable, ERC721URIStorage, ERC721Royalty, P
         return _baseTokenURI;
     }
 
-    function setDefaultRoyalty(address receiver, uint96 feeNumerator) public onlyRole(SETTER_ROLE) {
+    function setDefaultRoyalty(address receiver, uint96 feeNumerator) public onlyRole(ROYALTY_SETTER_ROLE) {
         _setDefaultRoyalty(receiver, feeNumerator);
     }
 
-    function setTokenRoyalty(uint256 tokenId, address receiver, uint96 feeNumerator) public onlyRole(SETTER_ROLE) {
+    function setTokenRoyalty(uint256 tokenId, address receiver, uint96 feeNumerator) public onlyRole(ROYALTY_SETTER_ROLE) {
         _setTokenRoyalty(tokenId, receiver, feeNumerator);
     }
 

@@ -8,14 +8,17 @@ export interface TestResources {
   pauserAddress: string;
   minter: Signer;
   minterAddress: string;
-  setter: Signer;
-  setterAddress: string;
+  uriSetter: Signer;
+  uriSetterAddress: string;
+  royaltySetter: Signer;
+  royaltySetterAddress: string;
   anon: Signer;
   anonAddress: string;
   midanft: MIDANFT;
   pauserRole: string;
   minterRole: string;
-  setterRole: string;
+  uriSetterRole: string;
+  royaltySetterRole: string;
 }
 
 export async function getTestResources(): Promise<TestResources> {
@@ -24,9 +27,11 @@ export async function getTestResources(): Promise<TestResources> {
   const pauserAddress = await pauser.getAddress();
   const minter = signers[2];
   const minterAddress = await minter.getAddress();
-  const setter = signers[3];
-  const setterAddress = await setter.getAddress();
-  const anon = signers[4];
+  const uriSetter = signers[3];
+  const uriSetterAddress = await uriSetter.getAddress();
+  const royaltySetter = signers[4];
+  const royaltySetterAddress = await royaltySetter.getAddress();
+  const anon = signers[5];
   const anonAddress = await anon.getAddress();
 
   const MIDANFT = await ethers.getContractFactory("MIDANFT");
@@ -35,23 +40,28 @@ export async function getTestResources(): Promise<TestResources> {
 
   const pauserRole = await midanft.PAUSER_ROLE();
   const minterRole = await midanft.MINTER_ROLE();
-  const setterRole = await midanft.SETTER_ROLE();
+  const uriSetterRole = await midanft.URI_SETTER_ROLE();
+  const royaltySetterRole = await midanft.ROYALTY_SETTER_ROLE();
   await midanft.grantRole(pauserRole, pauserAddress);
   await midanft.grantRole(minterRole, minterAddress);
-  await midanft.grantRole(setterRole, setterAddress);
+  await midanft.grantRole(uriSetterRole, uriSetterAddress);
+  await midanft.grantRole(royaltySetterRole, royaltySetterAddress);
 
   return {
     pauser,
     pauserAddress,
     minter,
     minterAddress,
-    setter,
-    setterAddress,
+    uriSetter,
+    uriSetterAddress,
+    royaltySetter,
+    royaltySetterAddress,
     anon,
     anonAddress,
     midanft,
     pauserRole,
     minterRole,
-    setterRole,
+    uriSetterRole,
+    royaltySetterRole,
   };
 }
