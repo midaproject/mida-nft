@@ -44,6 +44,33 @@ describe("MIDANFT", () => {
     });
   });
 
+  describe("setTokenURI", () => {
+    it("reject if not allowed", async () => {
+      const { midanft, anon, anonAddress, uriSetterRole } = testResources;
+      const tx = midanft.connect(anon).setTokenURI(0, "token-uri");
+      await expect(tx).revertedWith(
+        `AccessControl: account ${anonAddress.toLowerCase()} is missing role ${uriSetterRole}`
+      );
+    });
+
+    it("should set the token uri", async () => {
+      const { midanft, anon, minter, uriSetter } = testResources;
+      await midanft.connect(minter).safeMint();
+      await midanft.connect(uriSetter).setTokenURI(0, "token-uri");
+      const tokenURI = await midanft.connect(anon).tokenURI(0);
+      expect(tokenURI).eq("token-uri");
+    });
+
+    it("should concatenate base uri with token uri", async () => {
+      const { midanft, anon, minter, uriSetter } = testResources;
+      await midanft.connect(minter).safeMint();
+      await midanft.connect(uriSetter).setBaseURI("https://midanft.com/metadata/");
+      await midanft.connect(uriSetter).setTokenURI(0, "token-uri");
+      const tokenURI = await midanft.connect(anon).tokenURI(0);
+      expect(tokenURI).eq("https://midanft.com/metadata/token-uri");
+    });
+  });
+
   describe("setDefaultRoyalty", () => {
     it("reject if not setter", async () => {
       const { midanft, anon, anonAddress, royaltySetterRole } = testResources;
