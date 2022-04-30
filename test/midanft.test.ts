@@ -13,27 +13,11 @@ describe("MIDANFT", () => {
   });
 
   describe("setBaseURI", () => {
-    it("reject if NO role", async () => {
+    it("reject if not allowed", async () => {
       const { midanft, anon, anonAddress, uriSetterRole } = testResources;
       const tx = midanft.connect(anon).setBaseURI("ipfs://abc");
       await expect(tx).revertedWith(
         `AccessControl: account ${anonAddress.toLowerCase()} is missing role ${uriSetterRole}`
-      );
-    });
-
-    it("reject if pauser role", async () => {
-      const { midanft, pauser, pauserAddress, uriSetterRole } = testResources;
-      const tx = midanft.connect(pauser).setBaseURI("ipfs://abc");
-      await expect(tx).revertedWith(
-        `AccessControl: account ${pauserAddress.toLowerCase()} is missing role ${uriSetterRole}`
-      );
-    });
-
-    it("reject if minter role", async () => {
-      const { midanft, minter, minterAddress, uriSetterRole } = testResources;
-      const tx = midanft.connect(minter).setBaseURI("ipfs://abc");
-      await expect(tx).revertedWith(
-        `AccessControl: account ${minterAddress.toLowerCase()} is missing role ${uriSetterRole}`
       );
     });
 
@@ -72,7 +56,7 @@ describe("MIDANFT", () => {
   });
 
   describe("setDefaultRoyalty", () => {
-    it("reject if not setter", async () => {
+    it("reject if not allowed", async () => {
       const { midanft, anon, anonAddress, royaltySetterRole } = testResources;
       const tx = midanft.connect(anon).setDefaultRoyalty(anonAddress, 300);
       await expect(tx).revertedWith(
@@ -90,7 +74,7 @@ describe("MIDANFT", () => {
   });
 
   describe("setTokenRoyalty", () => {
-    it("reject if not setter", async () => {
+    it("reject if not allowed", async () => {
       const { midanft, anon, anonAddress, royaltySetterRole } = testResources;
       const tx = midanft.connect(anon).setTokenRoyalty(1, anonAddress, 200);
       await expect(tx).revertedWith(
@@ -114,7 +98,7 @@ describe("MIDANFT", () => {
   });
 
   describe("safeMint", () => {
-    it("reject mint if not minter", async () => {
+    it("reject if not allowed", async () => {
       const { midanft, anon, anonAddress, minterRole } = testResources;
       const tx = midanft.connect(anon).safeMint();
       await expect(tx).revertedWith(
@@ -135,7 +119,7 @@ describe("MIDANFT", () => {
   });
 
   describe("safeMintBatch", () => {
-    it("reject mint if not minter", async () => {
+    it("reject if not allowed", async () => {
       const { midanft, anon, anonAddress, minterRole } = testResources;
       const tx = midanft.connect(anon).safeMintBatch(5);
       await expect(tx).revertedWith(
