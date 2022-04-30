@@ -75,6 +75,15 @@ contract MIDANFT is ERC721, ERC721Enumerable, ERC721URIStorage, ERC721Royalty, P
     }
 
     /**
+     * @dev Set the URI for a specific token.
+     * @param tokenId Token to set URI
+     * @param newTokenURI The URI being set
+     */
+    function setTokenURI(uint256 tokenId, string memory newTokenURI) public onlyRole(URI_SETTER_ROLE) {
+        _setTokenURI(tokenId, newTokenURI);
+    }
+
+    /**
      * @dev Set the default royalty payment information.
      * @param receiver Address that should receive the royalties
      * @param feeNumerator Royalty fee
