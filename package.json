@@ -1,10 +1,11 @@
 {
   "name": "mida-nft",
   "version": "1.0.0",
-  "description": "The ERC721 MIDA Token",
+  "description": "The ERC721 MIDA Non-Fungible Token",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npx hardhat compile",
+    "test": "npx hardhat test"
   },
   "repository": {
     "type": "git",
